@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace UNO {
     public class BoardManager : MonoBehaviour {
-        Card[] playerCards;
-        Card[] computerCards;
-        Card[] discardedCards;
-        Card[] playDeck;
+        public List<Card> playerCards;
+        public List<Card> computerCards;
+        public List<Card> discardedCards;
+        public List<Card> playDeck;
         
         // Use this for initialization
         void Start() {

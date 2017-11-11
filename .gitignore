@@ -292,3 +292,4 @@ sysinfo.txt
 *.apk
 *.unitypackage
 EKAB/UnityPackageManager/
+EKAB/Assets/Scripts/Snippets/

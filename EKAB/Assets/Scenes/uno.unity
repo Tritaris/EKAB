@@ -137,7 +137,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 94501244}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 656.5, y: 356, z: 0}
+  m_LocalPosition: {x: 593, y: 322.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1598740297}
@@ -598,6 +598,12 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 114814754211719012, guid: 22dcae4279a1a1444b5913114a446ca5,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300026, guid: 4203ca2424b64b94ca8a6c57728c4594,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22dcae4279a1a1444b5913114a446ca5, type: 2}
   m_IsPrefabParent: 0
@@ -617,7 +623,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &940109090
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1056,7 +1062,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1598740297
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1064,7 +1070,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1598740296}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -418.5, y: -269.2, z: 0}
+  m_LocalPosition: {x: -355.5, y: -235, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 462856223}
@@ -1080,7 +1086,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 238, y: 86.8}
+  m_AnchoredPosition: {x: 237.5, y: 87.5}
   m_SizeDelta: {x: 475, y: 175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1598740298
@@ -1438,6 +1444,7 @@ GameObject:
   - component: {fileID: 1845194493}
   - component: {fileID: 1845194494}
   - component: {fileID: 1845194495}
+  - component: {fileID: 1845194496}
   m_Layer: 0
   m_Name: GameBoard
   m_TagString: Untagged
@@ -1486,6 +1493,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardList: []
+--- !u!114 &1845194496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1845194492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd3e32c9dbed4f4b8b913d1d069ac0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 94501248}
 --- !u!224 &1915190188 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224616933597518134, guid: 22dcae4279a1a1444b5913114a446ca5,

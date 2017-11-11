@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace UNO {
@@ -11,7 +9,7 @@ namespace UNO {
         
         public List<Card> cardList;
 
-        BoardManager bm;
+        private BoardManager bm;
 
         private void Awake() {
             LoadSprites();
@@ -39,7 +37,7 @@ namespace UNO {
                         continue;
                     }
 
-                    //Generates 0 Point Cards
+                    //Generate 0 Point Cards
                     if (i == 0) {
                         cardList.Add(new Card(color, Card.CardAction.None, 0));
                     }

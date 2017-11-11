@@ -75,9 +75,7 @@ namespace UNO {
             }
 
             //Sets Card image using sprite name string
-            Debug.Log(spriteName);
-
-            _image.sprite = cm.textures[Array.IndexOf(cm.names, spriteName)];
+            _image.sprite = cm.Textures[Array.IndexOf(cm.Names, spriteName)];
 
             //TESTING :: Used to update image when card values are updated.
             prevAction = card.Action;

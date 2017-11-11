@@ -8,15 +8,17 @@ namespace UNO {
         public List<Card> computerCards;
         public List<Card> discardedCards;
         public List<Card> playDeck;
+
+        CardManager cm;        
         
-        // Use this for initialization
         void Start() {
+            cm = GetComponent<CardManager>();
 
+            cm.BuildPlayDeck();
         }
-
-        // Update is called once per frame
+        
         void Update() {
-
+            
         }
     }
 }

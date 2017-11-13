@@ -24,7 +24,8 @@ namespace UNO {
         public CardColor Color;
         public CardAction Action;
         [Range(0,9)]
-        public int Points;               
+        public int Points;
+        public string Name = "";
 
         public Card(CardColor color, CardAction action, int points) {
             Color = color;

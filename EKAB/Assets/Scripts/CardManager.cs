@@ -11,32 +11,35 @@ namespace UNO {
         public List<Card> discardedCards;      //Contains cards currently out of play.  
 
         public List<Card> playerCards;
-        public int playerScore;
         public List<Card> computerCards;
-        public int computerScore;
 
-        public Dictionary<GameObject, Card> cardToGameObject;
+        public Card.CardColor wildCardColor;
+
+        public Dictionary<GameObject, Card> gameObjectToCard;
 
         private const int CardsPerHand = 7;
+        //GameManager gameManager;
+        GraphicManager graphicManager;
 
         private void Awake() {
-            cardToGameObject = new Dictionary<GameObject, Card>();
+            //gameManager = GetComponent<GameManager>();            
+            gameObjectToCard = new Dictionary<GameObject, Card>();
         }
 
-        void Start() {           
+        void Start() {
             GenerateDeck();
 
             BuildPlayDeck();
 
             Deal();
         }
-        
+
         void Update() {
-            
+
         }
 
         void GenerateDeck() {
-            masterDeck = new List<Card>();            
+            masterDeck = new List<Card>();
 
             for (int i = 0; i < 2; i++) {
                 foreach (Card.CardColor color in Enum.GetValues(typeof(Card.CardColor))) {
@@ -51,14 +54,14 @@ namespace UNO {
                     }
 
                     //Generate Points Cards
-                    for (int j = 1; j <= 9; j++) {                    
-                        masterDeck.Add(new Card(color, Card.CardAction.None, j));                    
+                    for (int j = 1; j <= 9; j++) {
+                        masterDeck.Add(new Card(color, Card.CardAction.None, j));
                     }
 
                     //Generate Action Cards                    
                     masterDeck.Add(new Card(color, Card.CardAction.DrawTwo, 20));
                     masterDeck.Add(new Card(color, Card.CardAction.Reverse, 20));
-                    masterDeck.Add(new Card(color, Card.CardAction.Skip, 20));                    
+                    masterDeck.Add(new Card(color, Card.CardAction.Skip, 20));
                 }
             }
 
@@ -66,11 +69,31 @@ namespace UNO {
             for (int k = 0; k < 4; k++) {
                 masterDeck.Add(new Card(Card.CardColor.Wild, Card.CardAction.Wild, 50));
                 masterDeck.Add(new Card(Card.CardColor.Wild, Card.CardAction.WildDraw, 50));
-            }            
-        }        
+            }
+        }
+
+        public bool CheckIfNeedCard(List<Card> cardList) {
+            Card topCard = discardedCards[discardedCards.Count - 1];
+            bool[] needCardArray = new bool[cardList.Count];
+
+            for (int i = 0; i < cardList.Count; i++) {
+                if (cardList[i].Color == topCard.Color || cardList[i].Color == wildCardColor || cardList[i].Action == topCard.Action && cardList[i].Action != Card.CardAction.None || cardList[i].Points == topCard.Points && cardList[i].Points < 20) {
+                    //Debug.Log("A card can be played");
+                    needCardArray[i] = false;
+                }
+                else {
+                    //Debug.Log("Unlock Draw Pile");
+                    needCardArray[i] = true;
+                }
+            }
+
+            bool needCard = !needCardArray.Contains(false);
+            Debug.Log("Lock playDeck = " + !needCard);
+            return needCard;
+        }
 
         public void RandomizeCardList(List<Card> deck) {
-            deck.Shuffle(); 
+            deck.Shuffle();
         }
 
         public void BuildPlayDeck() {
@@ -80,37 +103,69 @@ namespace UNO {
 
         void Deal() {
             //Add cards to hands
-            Draw(playerCards, CardsPerHand);
-            Draw(computerCards, CardsPerHand);
-            Draw(discardedCards, 1);
+            playerCards =  new List<Card>(Draw(CardsPerHand));
+            computerCards = new List<Card>(Draw(CardsPerHand));
+            discardedCards = new List<Card>(Draw(1));
         }
 
-        public void Draw(List<Card> hand, int numberOfCards) {
+        public List<Card> Draw(int numberOfCards) {
+            List<Card> cardsDrawn = new List<Card>();
+
             for (int i = 0; i < numberOfCards; i++) {
-                hand.Add(playDeck.ElementAt<Card>(0));
-                playDeck.RemoveAt(0);
+                //hand.Add(playDeck.ElementAt<Card>(playDeck.Count - 1));
+                cardsDrawn.Add(playDeck.ElementAt<Card>(playDeck.Count - 1));
+                playDeck.RemoveAt(playDeck.Count - 1);                
             }
+
+            return cardsDrawn;
         }
 
         public void Discard(Card card) {
-            List<Card> tempList;
-            if (playerCards.Contains(card)) {
-                playerScore += card.Points;
-                tempList = playerCards;
-            }
-            else if (computerCards.Contains(card)) {
-                computerScore += card.Points;
-                tempList = computerCards;
-            }
-            else {
-                tempList = discardedCards;
-            }
+            List<Card> tempList = GetCardList(card);            
 
             int cardIndex = tempList.IndexOf(card);
             
             discardedCards.Add(tempList.ElementAt<Card>(cardIndex));
-            tempList.RemoveAt(cardIndex);
-            
+            tempList.RemoveAt(cardIndex);            
+        }
+
+        public void SetWildCardColor(Card.CardColor color) {
+            wildCardColor = color;
+        }
+
+        public void SetWildCardColorRed() {
+            wildCardColor = Card.CardColor.Red;
+            Debug.Log("wildCardColor = " + wildCardColor);                       
+        }
+
+        public void SetWildCardColorBlue() {
+            wildCardColor = Card.CardColor.Blue;
+            Debug.Log("wildCardColor = " + wildCardColor);           
+        }
+
+        public void SetWildCardColorGreen() {
+            wildCardColor = Card.CardColor.Green;
+            Debug.Log("wildCardColor = " + wildCardColor);
+        }
+
+        public void SetWildCardColorYellow() {
+            wildCardColor = Card.CardColor.Yellow;
+            Debug.Log("wildCardColor = " + wildCardColor);            
+        }
+
+        public List<Card> GetCardList(Card card) {
+            if (playerCards.Contains(card)) {
+                return playerCards;
+            }
+            else if (computerCards.Contains(card)) {                
+                return computerCards;
+            }
+            else if(playDeck.Contains(card)) {
+                return playDeck;
+            }
+            else {
+                return discardedCards;
+            }
         }
     }
 

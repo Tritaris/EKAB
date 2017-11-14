@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 namespace UNO {
     public class GraphicManager : MonoBehaviour {        
@@ -13,9 +13,11 @@ namespace UNO {
         public GameObject playerPanel;
         public GameObject computerPanel;
         public GameObject discardPanel;
-        
+        public GameObject drawPanel;
+        public GameObject colorPanel;
 
-        private CardManager cm;
+        private CardManager cardManager;
+        private GameManager gameManager;
 
         //private int spacingX = 50;
         //private int spacingY = 75;
@@ -23,19 +25,17 @@ namespace UNO {
         private int cardHeight = 145;        
 
         private void Awake() {            
-            cm = FindObjectOfType<CardManager>();            
+            cardManager = GetComponent<CardManager>();
+            gameManager = GetComponent<GameManager>();
         }
 
         void Start() {
             LoadCardSprites();            
                                     
-            ShowCards(cm.playerCards,playerPanel);
-            ShowCards(cm.computerCards, computerPanel);
-            ShowCards(cm.discardedCards, discardPanel);
-        }
-
-        void Update() {
-            
+            ShowCardGraphics(cardManager.playerCards,playerPanel);
+            ShowCardGraphics(cardManager.computerCards, computerPanel);
+            ShowCardGraphics(cardManager.discardedCards, discardPanel);
+            ShowCardGraphics(cardManager.playDeck, drawPanel);
         }
 
         void LoadCardSprites() {
@@ -46,6 +46,28 @@ namespace UNO {
             for (int i = 0; i < Names.Length; i++) {
                 Names[i] = Textures[i].name;
             }
+        }       
+
+        public void CardLock(List<Card> cardList, bool on) {
+            foreach (var card in cardList) {
+                var keysWithMatchingValues = cardManager.gameObjectToCard.Where(p => p.Value == card).Select(p => p.Key);
+
+                foreach (var key in keysWithMatchingValues) {
+                    //Debug.Log(key);
+                    if(on)
+                        key.GetComponent<CanvasGroup>().blocksRaycasts = false;
+                    else
+                        key.GetComponent<CanvasGroup>().blocksRaycasts = true;
+                }
+            }
+        }        
+        
+        public void ShowColorPanel() {
+            colorPanel.SetActive(true);
+        }
+
+        public void HideColorPanel() {
+            colorPanel.SetActive(false);
         }
 
         Sprite SetCardImage(Card card) {
@@ -95,20 +117,41 @@ namespace UNO {
 
             //Returns Card image using sprite name string
             return Textures[Array.IndexOf(Names, spriteName)];
-        }        
+        }
 
-        void ShowCards(List<Card> cardList, GameObject panel) {
+        public GameObject CurrentPlayerPanel() {
+            switch(gameManager.CurrentPlayerName()) {
+                case "Player":
+                    return playerPanel;
+                case "Computer":
+                    return computerPanel;
+                default:
+                    return null;
+            }           
+        }
+
+        public GameObject NextPlayerPanel() {
+            switch (gameManager.NextPlayerName()) {
+                case "Player":
+                    return playerPanel;
+                case "Computer":
+                    return computerPanel;
+                default:
+                    return null;
+            }
+        }
+
+        void ShowCardGraphics(List<Card> cardList, GameObject panel) {
             Debug.Log("Show " + panel.name);            
             foreach (var card in cardList) {
                 GameObject card_go = new GameObject();
                 card_go.AddComponent<Draggable>();
 
                 RectTransform card_rect = card_go.AddComponent<RectTransform>();
-                card_rect.sizeDelta = new Vector2(cardWidth, cardHeight);
-                
+                card_rect.sizeDelta = new Vector2(cardWidth, cardHeight);                
 
                 CanvasGroup cg = card_go.AddComponent<CanvasGroup>();
-                cg.blocksRaycasts = true;
+                cg.blocksRaycasts = false;
 
                 LayoutElement le = card_go.AddComponent<LayoutElement>();
                 le.preferredWidth = cardWidth;
@@ -117,7 +160,7 @@ namespace UNO {
                 le.flexibleHeight = 0;
 
                 // Add our GO/Card pair to the dictionary.
-                cm.cardToGameObject.Add(card_go, card);
+                cardManager.gameObjectToCard.Add(card_go, card);
                 
                 //card_go.transform.position = new Vector2(0, 0);
                 card_go.transform.SetParent(panel.transform, true);
@@ -128,6 +171,19 @@ namespace UNO {
                 card_image.preserveAspect = true;
 
                 card_go.name = card.Name;                
+            }
+        }
+
+        public void MoveCardGraphicsToPanel(List<Card> cardsDrawn, GameObject panel) {
+            Debug.Log("Move cards drawn to" + panel.name);
+            
+            foreach (var card in cardsDrawn) {
+                var keysWithMatchingValues = cardManager.gameObjectToCard.Where(p => p.Value == card).Select(p => p.Key);
+
+                foreach (var key in keysWithMatchingValues) {
+                    key.transform.SetParent(panel.transform, true);
+                    key.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
+                }
             }
         }
     }

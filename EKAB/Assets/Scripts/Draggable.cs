@@ -25,7 +25,10 @@ namespace UNO {
             this.transform.SetParent(parentToReturnTo);
             this.transform.position = parentToReturnTo.position;
 
-            GetComponent<CanvasGroup>().blocksRaycasts = true;
+            if(parentToReturnTo.GetComponent<DiscardPile>() != true)
+                GetComponent<CanvasGroup>().blocksRaycasts = true;
+            else
+                GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
     }
 }
